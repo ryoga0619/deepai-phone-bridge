@@ -176,7 +176,7 @@ export class Bridge extends EventEmitter {
     return session;
   }
 
-  /** セッションを確保する（手机的リロード後にスレッドを再開する場合に使う） */
+  /** セッションを確保する（スマホのリロード後にスレッドを再開する場合に使う） */
   ensureSession(threadId) {
     let session = this.sessions.get(threadId);
     if (!session) {

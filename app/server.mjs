@@ -261,7 +261,7 @@ function proxyToDeepAI(req, res, url) {
   };
   delete headers["x-access-key"];
   if (hasSession) {
-    // 手机的ブラウザセッションで認証済み → Cookie をそのまま転送する
+    // スマホのブラウザセッションで認証済み → Cookie をそのまま転送する
   } else {
     delete headers.cookie;
     headers.authorization = `Bearer ${DEEPAI_TOKEN}`;

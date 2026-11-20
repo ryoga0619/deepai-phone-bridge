@@ -9,6 +9,7 @@
 
   const params = new URLSearchParams(location.search);
   const selfKey = params.get("k") || "";
+  const cards = new Map();
 
   const read = () => {
     try {
@@ -131,6 +132,7 @@
   function render() {
     const list = entries();
     listEl.textContent = "";
+    cards.clear();
     if (!list.length) {
       const empty = document.createElement("div");
       empty.className = "empty";
@@ -141,11 +143,20 @@
     for (const entry of list) {
       const el = card(entry);
       listEl.append(el);
-      probe(entry).then((ok) => {
-        el._state.dot.className = `dot ${ok ? "ok" : "bad"}`;
-        el._state.state.className = `state ${ok ? "ok" : "bad"}`;
-        el._state.state.textContent = ok ? "オンライン" : "オフライン";
-      });
+      cards.set(entry.id, el);
+    }
+    refreshStatus();
+  }
+
+  /** 生死判定だけを更新する（DOM を作り直さないので操作を邪魔しない） */
+  async function refreshStatus() {
+    for (const [id, el] of cards) {
+      const entry = entries().find((e) => e.id === id);
+      if (!entry) continue;
+      const ok = await probe(entry);
+      el._state.dot.className = `dot ${ok ? "ok" : "bad"}`;
+      el._state.state.className = `state ${ok ? "ok" : "bad"}`;
+      el._state.state.textContent = ok ? "オンライン" : "オフライン";
     }
   }
 
@@ -176,5 +187,5 @@
     " スマホの名前に複数 PC の DeepAI Code を並べ替えられます。";
 
   render();
-  setInterval(render, 30000);
+  setInterval(refreshStatus, 10000);
 })();
