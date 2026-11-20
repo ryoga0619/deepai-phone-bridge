@@ -18,6 +18,54 @@ LAN に公開するのはこのブリッジです。
 
 ---
 
+## リポジトリ
+
+<https://github.com/ryoga0619/deepai-phone-bridge> （MIT / 公開）
+
+---
+
+## 他の PC で使う
+
+1 台 1 接続先。PC ごとにこのブリッジを起動し、その PC の URL（または QR）をスマホで読み取ります。
+アクセスキーは **PC ごとに自動生成** されるため、別 PC のキーが混ざることはありません。
+
+### 準備（新しい PC で 1 回だけ）
+
+| 必要なもの | 備考 |
+| --- | --- |
+| DeepAI Code デスクトップアプリ | 起動中であること（`127.0.0.1:3773` で待機） |
+| Node.js 18 以上 | 無ければ DeepAI Code 同梱のランタイムが自動使われます |
+| 同じ Wi-Fi のスマホ | 自宅の外で使う場合は Tailscale 等の VPN を推奨 |
+
+### 導入方法 A : git clone
+
+```bash
+git clone https://github.com/ryoga0619/deepai-phone-bridge.git
+cd deepai-phone-bridge
+setup.cmd
+app\start-bridge.cmd
+```
+
+### 導入方法 B : ZIP（手順最小）
+
+1. <https://github.com/ryoga0619/deepai-phone-bridge/releases> → `v1.0.0` → Assets の
+   `deepai-phone-bridge-v1.0.0.zip` をダウンロード
+2. 解凍 → `setup.cmd` を実行（DeepAI Code / Node / ファイアウォールの確認）
+3. `app\start-bridge.cmd` を実行 → ターミナルに URL と QR が出る
+4. スマホで QR を読む
+
+### 環境変数（任意）
+
+| 変数 | 既定値 | 説明 |
+| --- | --- | --- |
+| `PORT` | `8787` | ブリッジの listen ポート |
+| `HOST` | `0.0.0.0` | listen アドレス |
+| `DEEPAI_BASE_URL` | `http://127.0.0.1:3773` | DeepAI Code サーバの場所 |
+| `ACCESS_KEY` | 自動生成 | スマフオから見たときのアクセスキー |
+| `ALLOW_ANONYMOUS` | 未設定 | `1` にすると認証を無効化（非推奨） |
+
+---
+
 ## 使い方（3 ステップ）
 
 ### 1. PC で起動する
