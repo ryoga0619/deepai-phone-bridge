@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<meta name="theme-color" content="#0b0d12" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>DeepAI リモート</title>
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot" id="conn-dot"></span>
+      <div>
+        <div class="brand-title">DeepAI リモート</div>
+        <div class="brand-sub" id="brand-sub">接続中…</div>
+      </div>
+    </div>
+    <button class="icon-btn" id="btn-files" title="成果物">成果物</button>
+  </header>
+
+  <main id="chat" class="chat">
+    <div class="welcome" id="welcome">
+      <h1>PC の DeepAI に指示を出せます</h1>
+      <p>「〇〇のHTMLを作って」のように日本語でそのまま指示してください。実行の進捗と成果物をそのまま確認・試せます。</p>
+      <div class="samples">
+        <button class="sample">BMIを計算できるWebページを作ってください</button>
+        <button class="sample">Python で FizzBuzz を書いて実行して</button>
+        <button class="sample">九九の表を表示するHTMLを作ってください</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="composer">
+    <div class="composer-inner">
+      <textarea id="input" rows="1" placeholder="PC の DeepAI に指示…" enterkeyhint="send"></textarea>
+      <button id="send" class="send" aria-label="送信">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 9.6 15 12 3.4 14.4z"/></svg>
+      </button>
+    </div>
+  </footer>
+</div>
+
+<!-- 成果物ドロワー -->
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer-head">
+    <strong>成果物</strong>
+    <button class="icon-btn" id="drawer-close">閉じる</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</div>
+
+<!-- プレビュー -->
+<div class="modal" id="preview" hidden>
+  <div class="modal-head">
+    <strong id="preview-title">プレビュー</strong>
+    <div class="modal-actions">
+      <a id="preview-open" target="_blank" rel="noreferrer" class="icon-btn">別タブ</a>
+      <button class="icon-btn" id="preview-close">閉じる</button>
+    </div>
+  </div>
+  <iframe id="preview-frame" title="プレビュー"></iframe>
+</div>
+
+<script src="/app.js" type="module"></script>
+</body>
+</html>

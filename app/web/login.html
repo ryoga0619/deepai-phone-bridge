@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeepAI リモート - ログイン</title>
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+<div class="login-wrap">
+  <h1>DeepAI リモート</h1>
+  <p>PC で表示されたアクセスキーを入力してください。</p>
+  <input id="key" type="password" inputmode="text" autocomplete="off" placeholder="アクセスキー" />
+  <button id="go">接続</button>
+  <div id="err" class="err"></div>
+  <img id="qr" alt="QRコード" />
+</div>
+<script>
+const key = new URLSearchParams(location.search).get("k");
+if (key) document.getElementById("key").value = key;
+document.getElementById("go").addEventListener("click", async () => {
+  const v = document.getElementById("key").value.trim();
+  if (!v) return;
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ key: v }),
+  });
+  if (res.ok) { location.href = "/"; }
+  else { document.getElementById("err").textContent = "キーが違います"; }
+});
+document.getElementById("key").addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("go").click(); });
+</script>
+</body>
+</html>
