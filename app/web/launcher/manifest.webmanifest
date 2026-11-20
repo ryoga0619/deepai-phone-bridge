@@ -1,0 +1,14 @@
+{
+  "name": "DeepAI PC ダッシュボード",
+  "short_name": "DeepAI",
+  "description": "複数の PC の DeepAI Code をスマホから切り替える",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0d12",
+  "theme_color": "#0b0d12",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

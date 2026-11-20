@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>DeepAI ダッシュボード（PC切替）</title>
+<meta name="theme-color" content="#0b0d12" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="DeepAI" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./icon.svg" />
+<link rel="stylesheet" href="./app.css" />
+</head>
+<body>
+<header class="bar">
+  <h1>DeepAI PC ダッシュボード</h1>
+  <p class="sub">使うPCを選ぶと、そのPCのDeepAI Codeが開きます</p>
+</header>
+
+<main>
+  <section class="list" id="list"></section>
+
+  <details class="add" id="addBox">
+    <summary>PC を追加する</summary>
+    <form id="addForm">
+      <label>
+        名前
+        <input id="name" type="text" placeholder="例: 自宅PC / 事務所PC" autocomplete="off" />
+      </label>
+      <label>
+        URL（そのまま貼り付けてOK）
+        <input id="url" type="url" inputmode="url" placeholder="http://192.168.0.6:8787/?k=xxxxxxxx" autocomplete="off" />
+      </label>
+      <p class="hint">各 PC で起動したターミナルに表示される URL を丸ごと貼ってください。キー（?k=）は自動で切り出します。</p>
+      <button type="submit">追加する</button>
+    </form>
+  </details>
+
+  <p class="note" id="note"></p>
+</main>
+
+<script src="./app.js"></script>
+</body>
+</html>

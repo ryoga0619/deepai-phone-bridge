@@ -329,6 +329,42 @@ function proxyWebSocket(req, socket) {
 }
 
 /* ========================================================================
+   複数PCダッシュボード (/launcher)
+   ======================================================================== */
+const LAUNCHER_DIR = path.join(WEB_DIR, "launcher");
+
+async function serveLauncherStatic(req, res, url) {
+  let rel = decodeURIComponent(url.pathname).replace(/^\/launcher/, "");
+  if (rel === "" || rel === "/") rel = "/index.html";
+  const file = safeJoin(LAUNCHER_DIR, rel);
+  if (!file) return json(res, 400, { error: "不正なパスです" });
+  let data;
+  try {
+    data = await fsp.readFile(file);
+  } catch {
+    return json(res, 404, { error: "ファイルが見つかりません" });
+  }
+  const ext = path.extname(file).toLowerCase();
+  if (ext === ".html" || ext === ".htm") {
+    const key = url.searchParams.get("k");
+    if (key && key === ACCESS_KEY) {
+      let html = data.toString("utf8");
+      html = html.replace(/(src|href)=["'](\.\/[^"']*?)["']/g, (m, attr, p) => {
+        const clean = p.replace(/^\.\//, "");
+        return `${attr}="/launcher/${clean}?k=${encodeURIComponent(key)}"`;
+      });
+      data = Buffer.from(html, "utf8");
+    }
+  }
+  res.writeHead(200, {
+    "content-type": mimeFor(file),
+    "content-length": data.length,
+    "cache-control": "no-cache",
+  });
+  res.end(data);
+}
+
+/* ========================================================================
    軽量モバイル PWA (/mobile)
    ======================================================================== */
 async function serveMobileStatic(req, res, url) {
@@ -526,7 +562,15 @@ async function handleMobileApi(req, res, url, pathname) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   try {
-    if (url.pathname === "/api/ping") return json(res, 200, { ok: true });
+    if (url.pathname === "/api/ping") {
+      // ダッシュボードから他 PC の生死確認できるよう CORS を許可する
+      res.writeHead(200, {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "access-control-allow-origin": "*",
+      });
+      return res.end(JSON.stringify({ ok: true, host: UPSTREAM.hostname, port: UPSTREAM.port }));
+    }
 
     if (url.pathname === "/qr.svg") {
       const svg = qrToSvg(localUrl(), { size: 260 });
@@ -557,6 +601,17 @@ const server = http.createServer(async (req, res) => {
       );
     }
     grantCookie(req, res, url);
+
+    // --- 複数PCダッシュボード (/launcher) ---
+    if (url.pathname === "/launcher" || url.pathname.startsWith("/launcher/")) {
+      if (url.pathname === "/launcher") {
+        const target = new URL(url.search, url);
+        target.pathname = "/launcher/index.html";
+        return serveLauncherStatic(req, res, target);
+      }
+      const sub = new URL(url.pathname + url.search, url);
+      return serveLauncherStatic(req, res, sub);
+    }
 
     // --- 軽量モバイル PWA (/mobile) ---
     if (url.pathname === "/mobile" || url.pathname.startsWith("/mobile/")) {
